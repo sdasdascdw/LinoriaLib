@@ -2845,15 +2845,15 @@ function Library:Notify(Text, Time)
     local XSize, YSize = Library:GetTextBounds(Text, Library.Font, 14);
 
     YSize = YSize + 7
-
-    local NotifyOuter = Library:Create('Frame', {
-        BorderColor3 = Color3.new(0, 0, 0);
-        Position = UDim2.new(0, 100, 0, 10);
-        Size = UDim2.new(0, 0, 0, YSize);
-        ClipsDescendants = true;
-        ZIndex = 100;
-        Parent = Library.NotificationArea;
-    });
+    
+local NotifyOuter = Library:Create('Frame', {
+    BorderColor3 = Color3.new(0, 0, 0);
+    Position = UDim2.new(0, 100, 1, -120 - (#Library.NotificationArea:GetChildren() * 60));
+    Size = UDim2.new(0, 0, 0, YSize);
+    ClipsDescendants = true;
+    ZIndex = 100;
+    Parent = Library.NotificationArea;
+});
 
     local NotifyInner = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
