@@ -2848,7 +2848,8 @@ function Library:Notify(Text, Time)
     
 local NotifyOuter = Library:Create('Frame', {
     BorderColor3 = Color3.new(0, 0, 0);
-    Position = UDim2.new(0, 100, 1, -120 - (#Library.NotificationArea:GetChildren() * 60));
+    AnchorPoint = Vector2.new(1, 1);
+Position = UDim2.new(1, -15, 1, -15 - (#Library.NotificationArea:GetChildren() * 60));
     Size = UDim2.new(0, 0, 0, YSize);
     ClipsDescendants = true;
     ZIndex = 100;
@@ -3024,10 +3025,10 @@ function Library:CreateWindow(...)
         BackgroundColor3 = 'BackgroundColor';
     });
 
-    local TabArea = Library:Create('Frame', {
-        BackgroundTransparency = 1;
-        Position = UDim2.new(0, 8, 0, 8);
-        Size = UDim2.new(1, -16, 0, 21);
+local TabArea = Library:Create('Frame', {
+    BackgroundTransparency = 1;
+    Position = UDim2.new(0, 8, 1, -29);
+    Size = UDim2.new(1, -16, 0, 21);
         ZIndex = 1;
         Parent = MainSectionInner;
     });
@@ -3038,12 +3039,11 @@ function Library:CreateWindow(...)
         SortOrder = Enum.SortOrder.LayoutOrder;
         Parent = TabArea;
     });
-
-    local TabContainer = Library:Create('Frame', {
-        BackgroundColor3 = Library.MainColor;
-        BorderColor3 = Library.OutlineColor;
-        Position = UDim2.new(0, 8, 0, 30);
-        Size = UDim2.new(1, -16, 1, -38);
+local TabContainer = Library:Create('Frame', {
+    BackgroundColor3 = Library.MainColor;
+    BorderColor3 = Library.OutlineColor;
+    Position = UDim2.new(0, 8, 0, 0);
+    Size = UDim2.new(1, -16, 1, -30);
         ZIndex = 2;
         Parent = MainSectionInner;
     });
