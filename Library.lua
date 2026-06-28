@@ -2999,14 +2999,17 @@ function Library:CreateWindow(...)
         BorderColor3 = 'AccentColor';
     });
 
-    local FishViewport = Library:Create('ViewportFrame', {
-        BackgroundTransparency = 1;
-        AnchorPoint = Vector2.new(1, 0);
-        Position = UDim2.new(1, -6, 0, 3);
-        Size = UDim2.new(0, 24, 0, 19);
-        ZIndex = 5;
-        Parent = Inner;
-    });
+local FishViewport = Library:Create('ViewportFrame', {
+    BackgroundTransparency = 1;
+    Ambient = Color3.fromRGB(150, 150, 150);
+    LightColor = Color3.fromRGB(255, 255, 255);
+    LightDirection = Vector3.new(-1, -1, -1);
+    AnchorPoint = Vector2.new(1, 0);
+    Position = UDim2.new(1, -8, 0, 4);
+    Size = UDim2.new(0, 40, 0, 32);
+    ZIndex = 5;
+    Parent = Inner;
+});
 
     local FishCamera = Instance.new('Camera');
     FishCamera.Parent = FishViewport;
