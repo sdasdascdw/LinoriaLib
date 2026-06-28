@@ -2846,10 +2846,16 @@ function Library:SetWatermark(Text)
 end;
 
 function Library:Notify(Text, Description, Time)
-    local XSize, YSize = Library:GetTextBounds(Text, Library.Font, 14);
+    local TitleX, TitleY = Library:GetTextBounds(Text, Library.Font, 14);
+    local DescX, DescY = 0, 0;
 
-    YSize = YSize + 7
-    
+    if Description and Description ~= '' then
+        DescX, DescY = Library:GetTextBounds(Description, Library.Font, 13);
+    end;
+
+    local XSize = math.max(TitleX, DescX);
+    local YSize = TitleY + 4 + (Description and Description ~= '' and (DescY + 2) or 0) + 4;
+
 local NotifyOuter = Library:Create('Frame', {
     BorderColor3 = Color3.new(0, 0, 0);
     Size = UDim2.new(0, 0, 0, YSize);
@@ -2900,14 +2906,29 @@ local NotifyOuter = Library:Create('Frame', {
     });
 
     local NotifyLabel = Library:CreateLabel({
-        Position = UDim2.new(0, 4, 0, 0);
-        Size = UDim2.new(1, -4, 1, 0);
+        Position = UDim2.new(0, 4, 0, 2);
+        Size = UDim2.new(1, -4, 0, TitleY);
         Text = Text;
         TextXAlignment = Enum.TextXAlignment.Left;
         TextSize = 14;
         ZIndex = 103;
         Parent = InnerFrame;
     });
+
+    if Description and Description ~= '' then
+        local DescLabel = Library:CreateLabel({
+            Position = UDim2.new(0, 4, 0, TitleY + 4);
+            Size = UDim2.new(1, -4, 0, DescY);
+            Text = Description;
+            TextXAlignment = Enum.TextXAlignment.Left;
+            TextSize = 13;
+            TextColor3 = Color3.fromRGB(190, 190, 190);
+            ZIndex = 103;
+            Parent = InnerFrame;
+        });
+
+        Library:RemoveFromRegistry(DescLabel);
+    end;
 
     local LeftColor = Library:Create('Frame', {
         BackgroundColor3 = Library.AccentColor;
