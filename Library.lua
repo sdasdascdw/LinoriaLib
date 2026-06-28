@@ -2681,14 +2681,14 @@ end;
 -- < Create other UI elements >
 do
 
-Library.NotificationArea = Library:Create('Frame', {
-    BackgroundTransparency = 1;
-    AnchorPoint = Vector2.new(1, 1);
-Position = UDim2.new(1, 0, 1, -(#Library.NotificationArea:GetChildren() * 60));
-    Size = UDim2.new(0, 320, 0, 300);
-    ZIndex = 100;
-    Parent = ScreenGui;
-})
+Library:Create('UIListLayout', {
+    Padding = UDim.new(0, 4);
+    FillDirection = Enum.FillDirection.Vertical;
+    SortOrder = Enum.SortOrder.LayoutOrder;
+    HorizontalAlignment = Enum.HorizontalAlignment.Right;
+    VerticalAlignment = Enum.VerticalAlignment.Bottom;
+    Parent = Library.NotificationArea;
+});
 
     Library:Create('UIListLayout', {
         Padding = UDim.new(0, 4);
@@ -2850,8 +2850,6 @@ function Library:Notify(Text, Time)
     
 local NotifyOuter = Library:Create('Frame', {
     BorderColor3 = Color3.new(0, 0, 0);
-    AnchorPoint = Vector2.new(1, 1);
-Position = UDim2.new(1, -15, 1, -15 - (#Library.NotificationArea:GetChildren() * 60));
     Size = UDim2.new(0, 0, 0, YSize);
     ClipsDescendants = true;
     ZIndex = 100;
@@ -2922,12 +2920,16 @@ Position = UDim2.new(1, -15, 1, -15 - (#Library.NotificationArea:GetChildren() *
         BackgroundColor3 = 'AccentColor';
     }, true);
 
-    pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, XSize + 8 + 4, 0, YSize), 'Out', 'Quad', 0.4, true);
+    TweenService:Create(NotifyOuter, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(0, XSize + 8 + 4, 0, YSize)
+    }):Play();
 
     task.spawn(function()
         wait(Time or 5);
 
-        pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, 0, 0, YSize), 'Out', 'Quad', 0.4, true);
+        TweenService:Create(NotifyOuter, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 0, 0, YSize)
+        }):Play();
 
         wait(0.4);
 
