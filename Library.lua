@@ -2680,14 +2680,15 @@ end;
 
 -- < Create other UI elements >
 do
+
 Library.NotificationArea = Library:Create('Frame', {
     BackgroundTransparency = 1;
     AnchorPoint = Vector2.new(1, 1);
-    Position = UDim2.new(1, -15, 1, -15);
-    Size = UDim2.new(0, 320, 0, 500);
+Position = UDim2.new(1, 0, 1, -(#Library.NotificationArea:GetChildren() * 60));
+    Size = UDim2.new(0, 320, 0, 300);
     ZIndex = 100;
     Parent = ScreenGui;
-});
+})
 
     Library:Create('UIListLayout', {
         Padding = UDim.new(0, 4);
