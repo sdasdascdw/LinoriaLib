@@ -5,6 +5,11 @@ local Teams = game:GetService('Teams');
 local Players = game:GetService('Players');
 local RunService = game:GetService('RunService')
 local TweenService = game:GetService('TweenService');
+local Lighting = game:GetService('Lighting');
+
+local MenuBlur = Instance.new('BlurEffect');
+MenuBlur.Size = 0;
+MenuBlur.Parent = Lighting;
 local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = Players.LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
@@ -2994,6 +2999,67 @@ function Library:CreateWindow(...)
         BorderColor3 = 'AccentColor';
     });
 
+    local FishViewport = Library:Create('ViewportFrame', {
+        BackgroundTransparency = 1;
+        AnchorPoint = Vector2.new(1, 0);
+        Position = UDim2.new(1, -6, 0, 3);
+        Size = UDim2.new(0, 24, 0, 19);
+        ZIndex = 5;
+        Parent = Inner;
+    });
+
+    local FishCamera = Instance.new('Camera');
+    FishCamera.Parent = FishViewport;
+    FishViewport.CurrentCamera = FishCamera;
+
+    local FishWorld = Instance.new('WorldModel');
+    FishWorld.Parent = FishViewport;
+
+    local FishModel = Instance.new('Model');
+    FishModel.Parent = FishWorld;
+
+    local Body = Instance.new('Part');
+    Body.Shape = Enum.PartType.Ball;
+    Body.Size = Vector3.new(1.4, 0.8, 0.8);
+    Body.Color = Color3.fromRGB(255, 170, 0);
+    Body.Material = Enum.Material.SmoothPlastic;
+    Body.Anchored = true;
+    Body.CanCollide = false;
+    Body.Parent = FishModel;
+
+    local Tail = Instance.new('WedgePart');
+    Tail.Size = Vector3.new(0.05, 0.6, 0.6);
+    Tail.Color = Color3.fromRGB(255, 170, 0);
+    Tail.Material = Enum.Material.SmoothPlastic;
+    Tail.Anchored = true;
+    Tail.CanCollide = false;
+    Tail.Parent = FishModel;
+
+    local Eye = Instance.new('Part');
+    Eye.Shape = Enum.PartType.Ball;
+    Eye.Size = Vector3.new(0.15, 0.15, 0.15);
+    Eye.Color = Color3.new(0, 0, 0);
+    Eye.Material = Enum.Material.SmoothPlastic;
+    Eye.Anchored = true;
+    Eye.CanCollide = false;
+    Eye.Parent = FishModel;
+
+    FishCamera.CFrame = CFrame.new(Vector3.new(0, 0, 3), Vector3.new(0, 0, 0));
+
+    local FishAngle = 0;
+
+    Library:GiveSignal(RenderStepped:Connect(function(Delta)
+        if (not Library.Watermark) or Outer.Visible then
+            FishAngle = FishAngle + (Delta * 2);
+
+            local FishCF = CFrame.new(Vector3.new(0, 0, 0)) * CFrame.Angles(0, FishAngle, 0);
+
+            Body.CFrame = FishCF;
+            Tail.CFrame = FishCF * CFrame.new(-0.85, 0, 0) * CFrame.Angles(0, 0, 0);
+            Eye.CFrame = FishCF * CFrame.new(0.55, 0.1, 0.25);
+        end;
+    end));
+
     local WindowLabel = Library:CreateLabel({
         Position = UDim2.new(0, 7, 0, 0);
         Size = UDim2.new(0, 0, 0, 25);
@@ -3513,17 +3579,21 @@ local TabContainer = Library:Create('Frame', {
     local Toggled = false;
     local Fading = false;
 
-    function Library:Toggle()
-        if Fading then
-            return;
-        end;
+function Library:Toggle()
+    if Fading then
+        return;
+    end;
 
-        local FadeTime = Config.MenuFadeTime;
-        Fading = true;
-        Toggled = (not Toggled);
-        ModalElement.Modal = Toggled;
+    local FadeTime = Config.MenuFadeTime;
+    Fading = true;
+    Toggled = (not Toggled);
+    ModalElement.Modal = Toggled;
 
-        if Toggled then
+    TweenService:Create(MenuBlur, TweenInfo.new(FadeTime, Enum.EasingStyle.Linear), {
+        Size = Toggled and 16 or 0
+    }):Play();
+
+    if Toggled then
             -- A bit scuffed, but if we're going from not toggled -> toggled we want to show the frame immediately so that the fade is visible.
             Outer.Visible = true;
 
